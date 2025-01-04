@@ -1,5 +1,6 @@
-from django.conf import settings
-from django.db import models
+from django.conf import settings # type: ignore
+from django.db import models # type: ignore
+from django.shortcuts import reverse  # type: ignore
 
 
 CATEGORY_CHOICES = (
@@ -20,13 +21,26 @@ class Item(models.Model):
     price = models.FloatField()
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
     label = models.CharField(choices=LABEL_CHOICES, max_length=2)
+    slug = models.SlugField()
+    description = models.TextField()
 
     def __str__(self):
         return self.title
 
 
+    def get_absolute_url(self):
+        return reverse("core:prduct", kwargs={
+            'slug': self.slug
+        })
+    
+    def add_to_cart_url(self):
+        return reverse("core:add_to_cart", kwargs = {
+            'slug': self.slug
+        })
+
 class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title
