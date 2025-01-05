@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404 # type: ignore
 from django.view.generic import ListView, DetailView
 from django.shortcut import redirect
+from django.util import timezone
 from core.models import Item, OrderItem, Order
 
 def products(request):
@@ -37,7 +38,9 @@ def add_to_cart(request, slug):
             order_item.save()
 
         else:
-            order = Order.objects.create(user=request.user)
+            ordered_date = timezone.now()
+            order = Order.objects.create(user=request.user,
+                                        ordered_date = ordered_date)
             order.items.add(order_item)
 
         return redirect("core:product", kwargs = {
