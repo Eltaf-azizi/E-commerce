@@ -25,7 +25,7 @@ class Item(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return self.title
+        return f"{self.quantity} of {self.item.title}"
 
 
     def get_absolute_url(self):
@@ -39,6 +39,10 @@ class Item(models.Model):
         })
 
 class OrderItem(models.Model):
+
+    user = models.foreignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
