@@ -78,6 +78,7 @@ def add_to_cart(request, slug):
             
             else:
                 # add a message saying the order does not contain the item
+                order.items.add(order_item)
                 messages.info(request, "This item was not in your cart.")
                 return redirect("core:product", slug=slug)
         
