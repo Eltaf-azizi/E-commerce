@@ -16,10 +16,16 @@ def checkout(request):
     return render(request, "checkout.html")
 
 
-def HomeView(ListView):
+class HomeView(ListView):
     model = Item 
     paginate_by = 10
     template_name = "home.html"
+
+
+class OrderSummaryView(detailView):
+    model = Order
+    template_name = "home.html"
+
     
 
 class ItemDetailView(DetailView): # type: ignore
