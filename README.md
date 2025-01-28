@@ -1,1 +1,1 @@
-<h1>E-commerce</h1>
+<h1 align="center">E-commerce</h1>
