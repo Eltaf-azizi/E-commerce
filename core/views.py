@@ -22,9 +22,9 @@ class HomeView(ListView):
     template_name = "home.html"
 
 
-class OrderSummaryView(detailView):
-    model = Order
-    template_name = "home.html"
+class OrderSummaryView(View):
+    def get(self, *args, **kwargs):
+        return render(self.request, 'order_summary.html')
 
     
 
