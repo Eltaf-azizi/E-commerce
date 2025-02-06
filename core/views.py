@@ -65,10 +65,12 @@ def add_to_cart(request, slug):
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "This item quantity was updated.")
+            return redirect("core:order_summary", slug=slug)
 
         else:
             messages.info(request, "This item was added to your cart.")
             order.items.add(order_item)
+            return redirect("core:order_summary", slug=slug)
 
     else:
         ordered_date = timezone.now()
@@ -77,7 +79,7 @@ def add_to_cart(request, slug):
         order.items.add(order_item)
         messages.info(request, "This item was added to your cart.")
 
-        return redirect("core:product", slug=slug)
+        return redirect("core:order_summary", slug=slug)
     
 
 @login_required
@@ -112,3 +114,26 @@ def remove_from_cart(request, slug):
         return redirect("core:product", slug=slug)
 
     return redirect("core:product", slug=slug)
+
+
+
+
+
+@login_required
+def remove_single_item_from_cart(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    order_qs = Order.objects.filter(
+        user=request.user,
+         ordered=False
+        )
+    if order_qs.exits():
+        order = order_qs[0]
+        # check if the order item is in the order
+
+        if order.item.filter(imte_slug = item.slug).exits():
+            order_item = OrderItem.objects.get_or_create(
+                item=item, 
+                user = request.user,
+                ordered = False
+            )[0]
+            
