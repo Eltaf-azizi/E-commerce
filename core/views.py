@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404 # type: ignore
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.utils import timezone
+from .forms import CheckoutForm
 from .models import Item, OrderItem, Order
 
 def products(request):
@@ -15,8 +16,21 @@ def products(request):
     return render(request, "products.html", context)
 
 
-def checkout(request):
-    return render(request, "checkout.html")
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        #form
+        form = CheckoutForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, "checkout.html", context)
+    
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        if form.is_valid():
+            print("The from is valid")
+            return redirect('core:checkout')
+
 
 
 class HomeView(ListView):
